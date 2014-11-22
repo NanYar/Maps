@@ -27,7 +27,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate //, MKMapViewD
     {
         super.viewDidLoad()
         
-        println("activePlace: \(activePlace)")
+        println("activePlace VC: \(activePlace)")
+        let lat = NSString(string: places[activePlace]["lat"]!).doubleValue
+        let lon = NSString(string: places[activePlace]["lon"]!).doubleValue
+        let latitude: CLLocationDegrees = lat
+        let longitude: CLLocationDegrees = lon
+        
         
         
         // Creating a longPressRecognizer

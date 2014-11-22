@@ -34,8 +34,6 @@ class TableViewController: UITableViewController
         places.append(["name" : "Taj Mahal 2", "lat" : "27.175277", "lon" : "78.042128"])
         places.append(["name" : "Taj Mahal 3", "lat" : "27.175277", "lon" : "78.042128"])
         println("Places: \(places.count)")
-        //println(places)
-        println("activePlace: \(activePlace)")
     }
 
     override func didReceiveMemoryWarning()
@@ -68,7 +66,7 @@ class TableViewController: UITableViewController
         return cell
     }
     
-    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath)
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
     {
         activePlace = indexPath.row
         println("indexPath.row: \(indexPath.row)")
