@@ -22,6 +22,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate //, MKMapViewD
     var nearestAddress: String = ""
     
     
+    
     // Default Functions
     override func viewDidLoad()
     {
@@ -31,8 +32,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate //, MKMapViewD
         let lat = NSString(string: places[activePlace]["lat"]!).doubleValue
         let lon = NSString(string: places[activePlace]["lon"]!).doubleValue
         let latitude: CLLocationDegrees = lat
-        let longitude: CLLocationDegrees = lon
-        
+        let longitude: CLLocationDegrees = lon        
         
         
         // Creating a longPressRecognizer
