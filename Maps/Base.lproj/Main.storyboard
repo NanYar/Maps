@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <scenes>
-        <!--My Maps-->
+        <!--My Map-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
                 <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="Maps" customModuleProvider="target" sceneMemberID="viewController">
@@ -29,7 +29,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="My Maps" id="6Ps-Yv-lkF">
+                    <navigationItem key="navigationItem" title="My Map" id="6Ps-Yv-lkF">
                         <barButtonItem key="rightBarButtonItem" title="Find Me" id="ycE-xx-r8s">
                             <connections>
                                 <action selector="findMeBarButtonItemPressed:" destination="vXZ-lx-hvc" id="1aZ-5B-Pti"/>
@@ -45,7 +45,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1352" y="-3"/>
+            <point key="canvasLocation" x="1321" y="-3"/>
         </scene>
         <!--My Places-->
         <scene sceneID="Y4Z-fZ-SeK">
@@ -56,21 +56,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="nJ5-3w-dbP">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="nJ5-3w-dbP" userLabel="Cell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nJ5-3w-dbP" id="8Xc-8q-MbG">
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="QSF-m2-dNs">
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QSF-m2-dNs" id="MFv-N8-yPo">
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="vn6-fU-G34">
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vn6-fU-G34" id="kWF-WR-Yem">
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -90,10 +78,13 @@
                     </navigationItem>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <connections>
+                        <segue destination="vXZ-lx-hvc" kind="show" identifier="findPlace" id="fI6-5h-5op"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ynt-mD-5M9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="955" y="-3"/>
+            <point key="canvasLocation" x="935" y="-3"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="K7h-4P-v4J">
@@ -116,4 +107,7 @@
             <point key="canvasLocation" x="554" y="-3"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="fI6-5h-5op"/>
+    </inferredMetricsTieBreakers>
 </document>

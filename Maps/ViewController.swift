@@ -27,6 +27,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate //, MKMapViewD
     {
         super.viewDidLoad()
         
+        println("activePlace: \(activePlace)")
+        
+        
         // Creating a longPressRecognizer
         let longPressGestureRecognizer: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "action:")
         longPressGestureRecognizer.minimumPressDuration = 1.0
@@ -137,7 +140,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate //, MKMapViewD
         } )
         
         
-        println("Länge: \(userLocation.coordinate.longitude) / Breite: \(userLocation.coordinate.latitude)")
+        //println("Länge: \(userLocation.coordinate.longitude) / Breite: \(userLocation.coordinate.latitude)")
     }
 
     func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!)

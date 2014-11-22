@@ -8,9 +8,18 @@
 
 import UIKit
 
-class TableViewController: UITableViewController {
+// Global Variables
+var places: [Dictionary<String, String>] = [] // = an array of dictionaries (with name + latitude + longitude for each place)
+var activePlace = 5
 
-    override func viewDidLoad() {
+class TableViewController: UITableViewController
+{
+    // Properties
+    
+    
+
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
 
         // Uncomment the following line to preserve selection between presentations
@@ -18,36 +27,57 @@ class TableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        // self.navigationController?.navigationBarHidden = true
+        
+        places.append(["name" : "Taj Mahal", "lat" : "27.175277", "lon" : "78.042128"])
+        places.append(["name" : "Taj Mahal 2", "lat" : "27.175277", "lon" : "78.042128"])
+        places.append(["name" : "Taj Mahal 3", "lat" : "27.175277", "lon" : "78.042128"])
+        println("Places: \(places.count)")
+        //println(places)
+        println("activePlace: \(activePlace)")
     }
 
-    override func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning()
+    {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
 
+    // UITableViewController
     // MARK: - Table view data source
-
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    {
         // #warning Potentially incomplete method implementation.
         // Return the number of sections.
-        return 0
+        return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
-        return 0
+        return places.count
     }
 
-    /*
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as UITableViewCell
-
-        // Configure the cell...
-
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as UITableViewCell
+        cell.textLabel.text = places[indexPath.row]["name"]
         return cell
     }
-    */
+    
+    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath)
+    {
+        activePlace = indexPath.row
+        println("indexPath.row: \(indexPath.row)")
+        
+        //self.navigationController?.navigationBarHidden = true
+        self.performSegueWithIdentifier("findPlace", sender: indexPath) // TODO: .row ?
+    }
+    
+
 
     /*
     // Override to support conditional editing of the table view.
