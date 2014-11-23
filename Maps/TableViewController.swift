@@ -10,12 +10,11 @@ import UIKit
 
 // Global Variables
 var places: [Dictionary<String, String>] = [] // = an array of dictionaries (with name + latitude + longitude for each place)
-var activePlace = 5
+var activePlace = 0
 
 class TableViewController: UITableViewController
 {
     // Properties
-    
     
 
     override func viewDidLoad()
@@ -30,9 +29,10 @@ class TableViewController: UITableViewController
         
         // self.navigationController?.navigationBarHidden = true
         
-        places.append(["name" : "Taj Mahal", "lat" : "27.175277", "lon" : "78.042128"])
-        places.append(["name" : "Taj Mahal 2", "lat" : "27.175277", "lon" : "78.042128"])
-        places.append(["name" : "Taj Mahal 3", "lat" : "27.175277", "lon" : "78.042128"])
+        if places.count == 0 // = Um doppelten Starteintrag zu vermeiden
+        {
+            places.append(["name" : "Taj Mahal", "lat" : "27.175277", "lon" : "78.042128"])
+        }
         println("Places: \(places.count)")
     }
 
@@ -40,6 +40,24 @@ class TableViewController: UITableViewController
     {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+//    // Example: For an own NavigationBar
+//    override func viewWillDisappear(animated: Bool)
+//    {
+//        self.navigationController?.navigationBarHidden = true
+//    }
+    
+    
+    
+    
+    // Helper Functions
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    {
+        if segue.identifier == "addPlace"
+        {
+            activePlace = -1 // = anhand der -1 weiss danna der VC, dass "+" gedrueckt wurde
+        }
     }
     
 
@@ -71,7 +89,6 @@ class TableViewController: UITableViewController
         activePlace = indexPath.row
         println("indexPath.row: \(indexPath.row)")
         
-        //self.navigationController?.navigationBarHidden = true
         self.performSegueWithIdentifier("findPlace", sender: indexPath) // TODO: .row ?
     }
     

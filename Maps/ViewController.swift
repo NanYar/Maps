@@ -22,23 +22,48 @@ class ViewController: UIViewController, CLLocationManagerDelegate //, MKMapViewD
     var nearestAddress: String = ""
     
     
-    
     // Default Functions
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
+        // Core Location (setting up locationManager)
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+
+        // Show activePlace
+        if activePlace == -1 // "+" was selected
+        {
+            // Core Location (starting locationManager)
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.startUpdatingLocation()
+        }
+        else // a place was selected
+        {
+            let lat: Double = NSString(string: places[activePlace]["lat"]!).doubleValue
+            let lon: Double = NSString(string: places[activePlace]["lon"]!).doubleValue
+            let latitude: CLLocationDegrees = lat
+            let longitude: CLLocationDegrees = lon
+            let latitudeDelta: CLLocationDegrees = 0.01
+            let longitudeDelta: CLLocationDegrees = 0.01
+            let span: MKCoordinateSpan = MKCoordinateSpanMake(latitudeDelta, longitudeDelta)
+            let location: CLLocationCoordinate2D = CLLocationCoordinate2DMake(latitude, longitude)
+            let region: MKCoordinateRegion = MKCoordinateRegionMake(location, span)
+            self.mapView.setRegion(region, animated: true)
+            
+            var annotation: MKPointAnnotation = MKPointAnnotation()
+            annotation.coordinate = location
+            annotation.title = places[activePlace]["name"]
+            self.mapView.addAnnotation(annotation)
+        }
         println("activePlace VC: \(activePlace)")
-        let lat = NSString(string: places[activePlace]["lat"]!).doubleValue
-        let lon = NSString(string: places[activePlace]["lon"]!).doubleValue
-        let latitude: CLLocationDegrees = lat
-        let longitude: CLLocationDegrees = lon        
         
         
         // Creating a longPressRecognizer
         let longPressGestureRecognizer: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "action:")
         longPressGestureRecognizer.minimumPressDuration = 1.0
-        mapView.addGestureRecognizer(longPressGestureRecognizer)
+        self.mapView.addGestureRecognizer(longPressGestureRecognizer)
     }
 
     override func didReceiveMemoryWarning()
@@ -50,13 +75,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate //, MKMapViewD
     // @IBActions
     @IBAction func findMeBarButtonItemPressed(sender: UIBarButtonItem)
     {
-        // Core Location
-        locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        // TODO: Creating a default location (due to LM start up waiting time)
+        
+        // Core Location (starting locationManager)
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
     }
+    
     
     
     // Helper Functions
@@ -64,13 +89,82 @@ class ViewController: UIViewController, CLLocationManagerDelegate //, MKMapViewD
     // UILongPressGestureRecognizer
     func action(gestureRecognizer: UIGestureRecognizer)
     {
-        // Creating an annotation
-        let touchPoint: CGPoint = gestureRecognizer.locationInView(mapView)
-        let newCoordinate: CLLocationCoordinate2D = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
-        let newAnnotation: MKPointAnnotation = MKPointAnnotation()
-        newAnnotation.coordinate = newCoordinate
-        mapView.addAnnotation(newAnnotation)
+        if gestureRecognizer.state == UIGestureRecognizerState.Began // = um Doppeleintraege zu vermeiden!
+        {
+            // Creating an annotation at the touched position
+            let touchPoint: CGPoint = gestureRecognizer.locationInView(mapView)
+            let newCoordinate: CLLocationCoordinate2D = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
+            
+            let touchPointLocation: CLLocation = CLLocation(latitude: newCoordinate.latitude, longitude: newCoordinate.longitude)
+            CLGeocoder().reverseGeocodeLocation(touchPointLocation, completionHandler:
+                { (placemarks, error) -> Void in
+                    if error == nil
+                    {
+                        let myPlacemark: CLPlacemark = CLPlacemark(placemark: placemarks[0] as CLPlacemark)
+                        
+                        // nil - Werte ausblenden
+                        var thoroughfare: String
+                        var subThoroughfare: String
+                        
+                        if myPlacemark.thoroughfare != nil
+                        {
+                            thoroughfare = myPlacemark.thoroughfare
+                        }
+                        else
+                        {
+                            thoroughfare = ""
+                        }
+                        
+                        if myPlacemark.subThoroughfare != nil
+                        {
+                            subThoroughfare = myPlacemark.subThoroughfare
+                        }
+                        else
+                        {
+                            subThoroughfare = ""
+                        }
+                        
+                        var title = "\(thoroughfare) \(subThoroughfare)"
+                        if title == " "
+                        {
+                            // TODO
+                            let date: NSDate = NSDate()
+                            title = "Added \(date)"
+                        }
+                        
+                        let newAnnotation: MKPointAnnotation = MKPointAnnotation()
+                        newAnnotation.coordinate = newCoordinate
+                        newAnnotation.title = title
+                        self.mapView.addAnnotation(newAnnotation)
+                        
+                        places.append(["name" : title, "lat" : "\(newCoordinate.latitude)", "lon" : "\(newCoordinate.longitude)"])
+                    }
+                    else
+                    {
+                        // TODO
+                        println("Error: \(error)")
+                    }
+            } )
+        }
     }
+    
+    
+//    // Example: For an own NavigationBar
+//    override func viewWillDisappear(animated: Bool)
+//    {
+//        self.navigationController?.navigationBarHidden = true
+//    }
+//
+//    oder:
+//
+//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+//    {
+//        if segue.identifier == "back"
+//        {
+//            self.navigationController?.navigationBarHidden = false
+//        }
+//    }
+    
     
     // CLLocationManagerDelegate
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!)
@@ -95,6 +189,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate //, MKMapViewD
         
         // Setting up the mapView
         self.mapView.setRegion(region, animated: true)
+        self.locationManager.stopUpdatingLocation()
         
         
         // Creating an annotation
@@ -111,17 +206,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate //, MKMapViewD
                 let myPlacemark: CLPlacemark = CLPlacemark(placemark: placemarks[0] as CLPlacemark)
                 
                 // nil - Werte ausblenden
-                var subThoroughfare: String
-                if myPlacemark.subThoroughfare != nil
-                {
-                    subThoroughfare = myPlacemark.subThoroughfare
-                }
-                else
-                {
-                    subThoroughfare = ""
-                }
-                
                 var thoroughfare: String
+                var subThoroughfare: String
+                
                 if myPlacemark.thoroughfare != nil
                 {
                     thoroughfare = myPlacemark.thoroughfare
@@ -129,6 +216,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate //, MKMapViewD
                 else
                 {
                     thoroughfare = ""
+                }
+
+                if myPlacemark.subThoroughfare != nil
+                {
+                    subThoroughfare = myPlacemark.subThoroughfare
+                }
+                else
+                {
+                    subThoroughfare = ""
                 }
                 
                 self.nearestAddressLabel.text =

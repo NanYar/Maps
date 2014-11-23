@@ -35,7 +35,7 @@
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Actual position is required upon usage of this app!</string>
+	<string>Actual position is required for this feature!</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Actual postition is always required for this app!</string>
 </dict>
